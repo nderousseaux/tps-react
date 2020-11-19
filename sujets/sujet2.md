@@ -37,7 +37,7 @@ Comme pour la liste de personnages, en attendant la réponse du serveur, le comp
 
 S'assurer que la liste de films est bien mise à jour lors de la sélection d'un nouveau personnage.
 
-V3
+<!-- V3
 ---
 
 Ecrire un custom hook `useDataFromUrl`.
@@ -47,13 +47,13 @@ En interne, cette fonction déclare les éléments de `state` nécessaire, et d�
 
 Utiliser ce custom hook dans l'ensemble des composants qui font des requêtes.
 
-Comment faire pour que l'on puisse passer un tableau d'URL à la fonction `useDataFromUrl`, et que le champ `data` obtenu soit un tableau contenant les données obtenue depuis chaque URL ?
+Comment faire pour que l'on puisse passer un tableau d'URL à la fonction `useDataFromUrl`, et que le champ `data` obtenu soit un tableau contenant les données obtenue depuis chaque URL ? -->
 
-V4
+V3
 ---
 
 Utiliser la bibliothèque [react-query](https://react-query.tanstack.com/) pour gérer les requêtes à l'API (à la place de notre custom hook).
-Bien lire la documentation sur les requêtes (https://react-query.tanstack.com/docs/guides/queries) et s'assurer d'avoir compris le fonctionnement des `keys` et le passage de paramètres à la fonction asynchrone de récupération des données.
+Bien lire la documentation sur les requêtes (https://react-query.tanstack.com/docs/guides/queries) et s'assurer d'avoir compris le fonctionnement des `keys`.
 
 > ___Indication___ : pour récupérer un tableau d'identifiants de films à partir d'un tableau d'URL du type `https://swapi.dev/api/films/3` -> `const filmsId = filmsUrl.map(u => u.split('/').filter(Boolean).pop());`.
 
