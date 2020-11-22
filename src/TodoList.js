@@ -26,7 +26,7 @@ const AddItemForm = ({addItem}) => {
       done: false
     });
   
-      const handleChange = event => {
+         const handleChange = event => {
             let newItem = {...currentItem}
             newItem[event.target.name] = event.target.value;
   

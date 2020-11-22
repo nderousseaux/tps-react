@@ -1,5 +1,4 @@
-Requêtes HTTP et tableaux de données
-===
+Requêtes HTTP et tableaux de données===
 
 Ecrire une application qui récupère des données de l'API `swapi.dev` et les affiche.
 
