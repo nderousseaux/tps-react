@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 
 import TodoList from './TodoList';
+import Swapi from './Swapi'
 
 let Toggle = ({ onChange }) => {
   let [t, setT] = useState(false);
@@ -36,10 +37,13 @@ let App = () => {
   };
   return (
     <div className="App">
+      <h1> TP 1</h1>
       <Toggle onChange={handleToggleChange} />
       <p>Toggle true count : {count}</p>
       <Counter />
       <TodoList />
+      <h1> TP 2 </h1>
+      <Swapi />
     </div>
   );
 }
