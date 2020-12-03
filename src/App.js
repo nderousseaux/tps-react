@@ -2,6 +2,14 @@ import { useState, useEffect } from 'react';
 import TodoList from './TodoList';
 import Swapi from './Swapi'
 
+import React from "react";
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route,
+  Link
+} from "react-router-dom";
+
 import {QueryCache, ReactQueryCacheProvider} from 'react-query';
 
 
@@ -41,15 +49,37 @@ let App = () => {
   };
   return (
     <ReactQueryCacheProvider queryCache={queryCache}>
-      <div className="App">
-        <h1> TP 1</h1>
-        <Toggle onChange={handleToggleChange} />
-        <p>Toggle true count : {count}</p>
-        <Counter />
-        <TodoList />
-        <h1> TP 2 </h1>
-        <Swapi />
-      </div>
+
+
+
+      <Router>
+        <div className="App">
+          <nav>
+            <ul>
+              <li>
+                <Link to="/tp1">TP n°1</Link>
+              </li>
+              <li>
+                <Link to="/tp2">TP n°2</Link>
+              </li>
+            </ul>
+          </nav>
+          <Switch>
+            <Route path="/tp1">
+              <Toggle onChange={handleToggleChange} />
+              <p>Toggle true count : {count}</p>
+              <Counter />
+              <TodoList />
+            </Route>
+            <Route path="/tp2">
+              <Swapi />
+            </Route>
+            <Route path="/">
+              <></>
+            </Route>
+          </Switch>
+        </div>
+      </Router>
     </ReactQueryCacheProvider>
   );
 }
