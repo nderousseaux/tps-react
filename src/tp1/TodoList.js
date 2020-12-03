@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import usePersistedState from "./persistedState"
+import usePersistedState from "./../persistedState"
 
 
 const Item = ({item}) => {

@@ -1,57 +1,52 @@
-import { useState, useEffect } from 'react';
-import TodoList from './TodoList';
-import Swapi from './Swapi'
+import { useState } from 'react';
 
 import React from "react";
 import {
   BrowserRouter as Router,
   Switch,
   Route,
-  Link
+  Link,
+  useHistory
 } from "react-router-dom";
 
 import {QueryCache, ReactQueryCacheProvider} from 'react-query';
 
+import Tp1 from './tp1/Tp1'
+import Tp2 from './tp2/Tp2'
+
+//Imports du tp3
+import Home from './tp3/Home'
+import Signup from './tp3/Signup'
+import Signin from './tp3/Signin'
 
 const queryCache = new QueryCache()
 
-let Toggle = ({ onChange }) => {
-  let [t, setT] = useState(false);
-  let handleClick = () => {
-    setT(c => !c);
-  };
-  useEffect(() => { onChange(t); }, [t]);
-  return <p>
-    Toggle value :
-    {t ? 'true' : 'false'}
-    <button onClick={handleClick}>Change</button>
-  </p>;
-};
-
-let Counter = () => {
-  let [c, setC] = useState(0);
-  let handleClick = () => {
-    setC(v => v + 1);
-  };
-  return <div>
-    <span>Value : {c}</span>
-    <button onClick={handleClick}>Inc</button>
-    <button onClick={() => setC(0)}>Reset</button>
-  </div>;
-};
+//TODO: Gestion des erreurs
 
 let App = () => {
-  let [count, setCount] = useState(0);
-  let handleToggleChange = (v) => {
-    if (v) {
-      setCount(c => c + 1);
-    }
+
+  let [user, setUser] = useState(null);
+
+  let history = useHistory()
+
+  const connect = (id, mdp) => {
+    let body = { username: id, password: mdp}
+    fetch("http://localhost:4200/signin", {method: 'POST',   headers: { 'Content-Type': 'application/json' },body: JSON.stringify(body)})
+    .then(() => {
+      history.push("/") //FIXME: HISTORY is undefined ?
+      console.log("salut") //TODO: Connexion
+    }) 
+    .catch((err) => console.log(err))
   };
+
+  const createUser = (id, mdp) => {
+    let body = { username: id, password: mdp}
+    fetch("http://localhost:4200/signup", {method: 'POST',   headers: { 'Content-Type': 'application/json' },body: JSON.stringify(body)})
+    .catch((err) => console.log(err)) //FIXME: Inscription
+  }
+
   return (
     <ReactQueryCacheProvider queryCache={queryCache}>
-
-
-
       <Router>
         <div className="App">
           <nav>
@@ -63,19 +58,43 @@ let App = () => {
                 <Link to="/tp2">TP n°2</Link>
               </li>
             </ul>
+            <h1>TP n° 3</h1>
+            <ul>
+              <li>
+                <Link to="/">Home</Link>
+              </li>
+              { user != null ? <>
+                <li>
+                  <Link to="/signout">Signout</Link>
+                </li>
+                <p>User : { user.username }</p> 
+                </> :
+                <>
+                  <li>
+                    <Link to="/signin">Signin</Link>
+                  </li>
+                  <li>
+                    <Link to="/signup">Signup</Link>
+                  </li>
+                </>
+              }
+            </ul>
           </nav>
           <Switch>
             <Route path="/tp1">
-              <Toggle onChange={handleToggleChange} />
-              <p>Toggle true count : {count}</p>
-              <Counter />
-              <TodoList />
+              <Tp1/>
             </Route>
             <Route path="/tp2">
-              <Swapi />
+              <Tp2/>
+            </Route>
+            <Route path="/signin">
+              <Signin connect={connect}/>
+            </Route>
+            <Route path="/signup">
+              <Signup createUser={createUser}/>
             </Route>
             <Route path="/">
-              <></>
+              <Home />
             </Route>
           </Switch>
         </div>
