@@ -10,8 +10,8 @@ En plus des routes de gestion des User, l'API fournit les routes suivantes :
  - `GET /list` : renvoie un tableau d'objets _List_
  - `POST /list` : attend un objet contenant un champ `title`, crée et renvoie une nouvelle _List_
  - `DELETE /list/:id` : supprime la _List_ d'id `id`
- - `GET /list/:id/item` : renvoie un tableau d'objets _Item_ associés à la _List_ d'id `id`
- - `POST /list/:id/item` : attend un objet contenant un champ `title`, crée et renvoie un nouvel _Item_ associé à _List_ d'id `id`
+ - `GET /list/:id/items` : renvoie un tableau d'objets _Item_ associés à la _List_ d'id `id`
+ - `POST /list/:id/items` : attend un objet contenant un champ `text`, crée et renvoie un nouvel _Item_ associé à _List_ d'id `id`
  - `DELETE /item/:id` : supprime l'_Item_ d'id `id`
 
 Toutes ces routes ne sont accessibles qu'à un utilisateur authentifié et attendent un token dans l'en-tête `Authorization`.
