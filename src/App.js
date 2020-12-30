@@ -14,24 +14,18 @@ import {QueryCache, ReactQueryCacheProvider} from 'react-query';
 import Tp1 from './tp1/Tp1'
 import Tp2 from './tp2/Tp2'
 
-let url_prefix = 'http://localhost:4200'
+import { AuthProvider, useAuth } from "./Auth";
+
 
 const queryCache = new QueryCache()
-
-let checkStatus = res => {
-  if (res.ok) {
-    return res;
-  } else {
-    return res.text()
-      .then(msg => { throw new Error(msg);})
-  }
-};
 
 let Home = () => {
   return <h3>Home</h3>
 }
 
-let Menu = ({user, signout }) => {
+let Menu = () => {
+
+  let { user, signout } = useAuth()
   return <nav>
     <ul>
       <li>
@@ -53,19 +47,15 @@ let Menu = ({user, signout }) => {
   </nav>
 }
 
-let Signin = ({ onSubmit }) => {
+let Signin = () => {
+  let { signin } = useAuth()
+
   let [username, setUsername] = useState('');
   let [password, setPassword] = useState('');
-  let [message, setMessage] = useState('');
 
   let handleSubmit = (e) => {
     e.preventDefault();
-    onSubmit(username, password)
-    .catch(err => {
-      setUsername('');
-      setPassword('');
-      setMessage(err.message);
-    });
+    signin(username, password)
   };
 
   return <>
@@ -77,23 +67,17 @@ let Signin = ({ onSubmit }) => {
       <input type="text" value={password} onChange={(e) => setPassword(e.target.value)}/>
       <input type="submit" />
     </form>
-    { message ? <p>{message}</p>: null }
   </>;
 }
 
 let Signup = ({ onSubmit }) => {
+  let { signup } = useAuth()
   let [username, setUsername] = useState('');
   let [password, setPassword] = useState('');
-  let [message, setMessage] = useState('');
 
   let handleSubmit = (e) => {
     e.preventDefault();
-    onSubmit(username, password)
-    .catch(err => {
-      setUsername('');
-      setPassword('');
-      setMessage(err.message);
-    });
+    signup(username, password);
   };
 
   return <>
@@ -105,93 +89,33 @@ let Signup = ({ onSubmit }) => {
       <input type="text" value={password} onChange={(e) => setPassword(e.target.value)}/>
       <input type="submit" />
     </form>
-    { message ? <p>{message}</p>: null }
   </>;
 };
 
 let Main = () => {
-  let [user, setUser] = useState(null);
-  let [userCheck, setUserCheck] = useState(false);
-
-  let history = useHistory();
-
-  let signin = (username, password) => {
-    return fetch(`${url_prefix}/signin`, {
-      method: 'POST',
-      headers : {
-        'Content-type' : 'application/json'
-      },
-      body: JSON.stringify({ username, password })
-    })
-      .then(checkStatus)
-      .then(res => res.json())
-      .then(data => {
-        setUser(data.user);
-        window.localStorage.setItem('token', data.token);
-        history.push("/");
-      });
-  };
-
-  let signup = (username, password) => {
-    return fetch(`${url_prefix}/signup`, {
-      method: 'POST',
-      headers : {
-        'Content-type' : 'application/json'
-      },
-      body: JSON.stringify({ username, password })
-    })
-      .then(checkStatus)
-      .then(() => {
-        history.push("/signin");
-      });
-  };
-
-  let signout = () => {
-    setUser(null);
-    window.localStorage.removeItem('token');
-    history.push('/');
-  }
-
-  useEffect(() => {
-    let token = window.localStorage.getItem('token');
-    fetch(`${url_prefix}/whoami`, {
-      headers: {
-        Authorization : `Bearer ${token}`
-      }
-    })
-    .then(checkStatus)
-    .then(res => res.json())
-    .then(user => {
-      setUser(user);
-      setUserCheck(true);
-    })
-    .catch(() => {
-      setUser(null);
-      setUserCheck(true);
-    });
-  }, []);
   
   return (
-    !userCheck ? 'Checking authentification...' :
       <div className="App">
-        <Menu user={user} signout={signout} />
-        <Switch>
-          <Route path="/tp1">
-            <Tp1/>
-          </Route>
-          <Route path="/tp2">
-            <Tp2/>
-          </Route>
-          <Route path="/signin">
-            <Signin onSubmit={signin}/>
-          </Route>
-          <Route path="/signup">
-            <Signup onSubmit={signup}/>
-          </Route>
-          <Route path="/">
-            <Home />
-          </Route>
-        </Switch>
+        <AuthProvider>
+          <Menu/>
+          <Switch>
+            <Route path="/tp1">
+              <Tp1/>
+            </Route>
+            <Route path="/tp2">
+              <Tp2/>
+            </Route>
+            <Route path="/signin">
+              <Signin/>
+            </Route>
+            <Route path="/signup">
+              <Signup/>
+            </Route>
+            <Route path="/">
+              <Home />
+            </Route>
+          </Switch>
+        </AuthProvider>
       </div>
   )
 }
