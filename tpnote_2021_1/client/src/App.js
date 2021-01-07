@@ -5,9 +5,9 @@ import { QueryCache, ReactQueryCacheProvider } from 'react-query';
 // import { ReactQueryDevtools } from 'react-query-devtools';
 
 import Menu from './Menu';
-import Users from './Users';
-import Authors from './Authors';
-import Books from './Books';
+import {Users, UserDetail} from './Users';
+import {Authors, AuthorDetail} from './Authors';
+import {Books, BookDetail} from './Books';
 
 const queryCache = new QueryCache({
     defaultConfig: {
@@ -28,6 +28,24 @@ const Main = () => {
             <Switch>
                 <Route exact path="/">
                     <Home />
+                </Route>
+                <Route exact path="/users">
+                    <Users />
+                </Route>
+                <Route path="/users/:id">
+                    <UserDetail/>
+                </Route>
+                <Route exact path="/authors">
+                    <Authors />
+                </Route>
+                <Route path="/authors/:id">
+                    <AuthorDetail/>
+                </Route>
+                <Route exact path="/books">
+                    <Books />
+                </Route>
+                <Route path="/books/:id">
+                    <BookDetail/>
                 </Route>
                 <Redirect to="/" />
             </Switch>
