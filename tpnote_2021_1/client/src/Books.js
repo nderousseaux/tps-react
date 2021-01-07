@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Route, Link, useRouteMatch, useParams, useHistory } from 'react-router-dom';
 import { useQuery, useQueryCache, useMutation } from 'react-query';
 
@@ -81,23 +81,41 @@ let BookDetail = () => {
 
 	let { id } = useParams();
 
-	let {isLoading, data: bookDetail } = useQuery(
-		['bookDetail'],
-		() => booksAPI.getBooks(id)
-	);
+    
+    const [currentBook, setCurrentBook] = useState(null)
+    const [author, setAuthor] = useState(null)
+
+	let {isLoadingB, data: books } = useQuery(
+		['books'],
+		() => booksAPI.getBooks()
+    );
+
+    let { isLoadingA, data: authors } = useQuery(
+        ["authors"], 
+        () => booksAPI.getAuthors()
+    );
+    
+    useEffect(() => {
+		setCurrentBook(books?.find(b => b.id === parseInt(id)));
+    }, [id, books])
+    
+    useEffect(() => {
+		setAuthor(authors?.find(a => a.id === parseInt(currentBook.AuthorId)));
+    }, [id, authors, currentBook])
 
 	return (
 		<>
-			<h3>Books</h3>
-	
-			{isLoading ? 'Loading...' : book && <>
-				<ul>
-					{book?.map(b => <>
-							<li><a onClick={() => history.push(`/books/${id}`)}> {b.title}</a></li>
-						</>
-					)}
-				</ul>
-			</>}
+			{isLoadingB ? 'Loading...' : currentBook && <>
+                <h3>Book : {currentBook.name}</h3>
+
+                <p>Title : {currentBook.title}</p>
+                
+                {isLoadingA ? 'Loading...' : author && <>
+                    <p>Author : {author.firstname} {author.lastname}</p>
+                </>}
+
+                ... manque de temps pour la suite
+            </>}
 			
 		</>
 	);
